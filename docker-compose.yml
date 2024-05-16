@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  web:
+    build: ./web
+    image: web-test
+    networks:
+      - backend
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - TRIPMEAL_KEY=${TRIPMEAL_KEY}
+      - SERVER_PORT=${SERVER_PORT}
+
+  db:
+    build: ./database
+    image: tripmealdb
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - tripmeal-data:/var/lib/mysql
+
+networks:
+  backend:
+
+volumes:
+  tripmeal-data:
